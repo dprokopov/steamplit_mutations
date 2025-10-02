@@ -144,11 +144,15 @@ def apply_custom_css():
         padding: 20px;
         margin: 15px 0;
         box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        color: #1a202c;
+    }
+    
+    .info-box p, .info-box div, .info-box span, .info-box li {
+        color: #1a202c !important;
     }
     
     .info-box strong {
-        color: #4c51bf;
+        color: #4c51bf !important;
+        font-weight: 700 !important;
     }
     
     .metric-card {
@@ -207,18 +211,18 @@ def apply_custom_css():
         border-left: 5px solid #48bb78;
     }
     
-    .stMetric {
-        background: transparent !important;
+    .validation-highlight {
+        background: #fef5e7;
+        border: 2px solid #f39c12;
+        border-radius: 8px;
+        padding: 12px;
+        margin: 10px 0;
+        color: #7d6608 !important;
+        font-weight: 600;
     }
     
-    .stMetric label {
-        color: #718096 !important;
-        font-weight: 600 !important;
-    }
-    
-    .stMetric [data-testid="stMetricValue"] {
-        color: #2d3748 !important;
-        font-weight: 700 !important;
+    .stMarkdown p, .stMarkdown div, .stMarkdown span {
+        color: #1a202c !important;
     }
     </style>
     """, unsafe_allow_html=True)
@@ -325,14 +329,17 @@ def get_sequence_for_mutation(genbank_record, mutation_type):
 
 def highlight_mutation(sequence, position, ref, alt):
     if position < 1 or position > len(sequence):
-        return sequence, False
+        return sequence, False, None
     
     idx = position - 1
-    if sequence[idx].upper() != ref.upper():
-        return sequence, False
+    actual_base = sequence[idx].upper()
+    
+    if actual_base != ref.upper():
+        highlighted = sequence[:idx] + f'<span class="mutation-highlight" style="background: #ffa500;">{actual_base}</span>' + sequence[idx+1:]
+        return highlighted, False, actual_base
     
     highlighted = sequence[:idx] + f'<span class="mutation-highlight">{alt}</span>' + sequence[idx+1:]
-    return highlighted, True
+    return highlighted, True, actual_base
 
 def analyze_mutation(sequence, position, ref, alt):
     analysis = {}
@@ -341,12 +348,18 @@ def analyze_mutation(sequence, position, ref, alt):
     
     if idx < 0 or idx >= len(sequence):
         analysis['validation'] = '❌ Position out of range'
+        analysis['actual_base'] = 'N/A'
         return analysis
     
-    if sequence[idx].upper() == ref.upper():
+    actual_base = sequence[idx].upper()
+    analysis['actual_base'] = actual_base
+    
+    if actual_base == ref.upper():
         analysis['validation'] = '✅ Reference allele matches'
+        analysis['validation_status'] = 'match'
     else:
-        analysis['validation'] = f'⚠️ Reference mismatch: expected {ref}, found {sequence[idx]}'
+        analysis['validation'] = f'⚠️ Mismatch! Expected {ref}, found {actual_base}'
+        analysis['validation_status'] = 'mismatch'
     
     if ref != alt:
         if (ref in 'AG' and alt in 'AG') or (ref in 'CT' and alt in 'CT'):
@@ -421,7 +434,7 @@ def main():
     apply_custom_css()
     
     st.markdown("<h1>🧬 Mutation Analyzer</h1>", unsafe_allow_html=True)
-    st.markdown("<p class='subtitle'>¡Joder, por qué no le pedí a Dima que hiciera esta página antes?</p>", unsafe_allow_html=True)
+    st.markdown("<p class='subtitle'>Advanced DNA Mutation Analysis & Visualization Platform</p>", unsafe_allow_html=True)
     
     if 'analysis_history' not in st.session_state:
         st.session_state.analysis_history = []
@@ -438,18 +451,19 @@ def main():
     with col2:
         st.write("")
         st.write("")
-        analyze_button = st.button("🔬 Analyze Mutation", use_container_width=True)
+        analyze_button = st.button("🔬 Analyze Mutation", width="stretch")
     
     st.markdown("<div class='info-box'>", unsafe_allow_html=True)
     st.markdown("""
-    **Supported Formats:**
-    - `NM_022552.5:c.2688A>G` - RefSeq with **coding sequence** position (CDS)
-    - `NC_000009.11:g.130549830C>T` - Genomic position
-    - `CDK9 c.208C>T` - Gene name with CDS mutation
-    - `c.208C>T` - CDS position only (requires context)
-    
-    **Note:** c. = coding sequence (CDS), g. = genomic coordinates
-    """)
+    <p style='color: #1a202c !important;'><strong style='color: #4c51bf !important;'>Supported Formats:</strong></p>
+    <ul style='color: #1a202c !important;'>
+    <li><code>NM_022552.5:c.2688A>G</code> - RefSeq with <strong>coding sequence</strong> position (CDS)</li>
+    <li><code>NC_000009.11:g.130549830C>T</code> - Genomic position</li>
+    <li><code>CDK9 c.208C>T</code> - Gene name with CDS mutation</li>
+    <li><code>c.208C>T</code> - CDS position only (requires context)</li>
+    </ul>
+    <p style='color: #1a202c !important;'><strong style='color: #4c51bf !important;'>Note:</strong> c. = coding sequence (CDS), g. = genomic coordinates</p>
+    """, unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
     
     if analyze_button and mutation_input:
@@ -503,15 +517,22 @@ def main():
         ref = mutation_data['ref']
         alt = mutation_data['alt']
         
-        highlighted_seq, is_valid = highlight_mutation(sequence, position, ref, alt)
+        highlighted_seq, is_valid, actual_base = highlight_mutation(sequence, position, ref, alt)
+        
+        analysis = analyze_mutation(sequence, position, ref, alt)
         
         if not is_valid:
-            st.warning(f"⚠️ Position {position} may be out of range or reference allele doesn't match")
+            st.markdown(f"""<div class='validation-highlight'>
+            ⚠️ <strong>VALIDATION WARNING:</strong> At position {position}, expected nucleotide <strong>{ref}</strong>, 
+            but found <strong>{actual_base}</strong> in the sequence!
+            </div>""", unsafe_allow_html=True)
+        else:
+            st.markdown(f"""<div class='success-box'>
+            ✅ <strong>VALIDATION PASSED:</strong> Nucleotide at position {position} is <strong>{actual_base}</strong> (matches expected {ref})
+            </div>""", unsafe_allow_html=True)
         
         st.markdown("---")
         st.subheader("📊 Mutation Analysis")
-        
-        analysis = analyze_mutation(sequence, position, ref, alt)
         
         col1, col2, col3, col4 = st.columns(4)
         
@@ -554,25 +575,44 @@ def main():
         with col1:
             st.markdown("### 🧪 Molecular Details")
             st.markdown("<div class='info-box'>", unsafe_allow_html=True)
-            st.write(f"**Validation:** {analysis['validation']}")
-            st.write(f"**Sequence Type:** {seq_type}")
+            st.markdown(f"""
+            <p style='color: #1a202c !important;'><strong style='color: #4c51bf !important;'>Validation:</strong> <span style='color: #1a202c !important;'>{analysis['validation']}</span></p>
+            <p style='color: #1a202c !important;'><strong style='color: #4c51bf !important;'>Actual Base at Position:</strong> <span style='color: #1a202c !important; font-weight: 700;'>{analysis['actual_base']}</span></p>
+            <p style='color: #1a202c !important;'><strong style='color: #4c51bf !important;'>Sequence Type:</strong> <span style='color: #1a202c !important;'>{seq_type}</span></p>
+            """, unsafe_allow_html=True)
+            
             if 'original_codon' in analysis:
-                st.write(f"**Original Codon:** {analysis['original_codon']}")
-                st.write(f"**Mutated Codon:** {analysis['mutated_codon']}")
-                st.write(f"**Codon Position:** {analysis['codon_position']}")
+                st.markdown(f"""
+                <p style='color: #1a202c !important;'><strong style='color: #4c51bf !important;'>Original Codon:</strong> <span style='color: #1a202c !important;'>{analysis['original_codon']}</span></p>
+                <p style='color: #1a202c !important;'><strong style='color: #4c51bf !important;'>Mutated Codon:</strong> <span style='color: #1a202c !important;'>{analysis['mutated_codon']}</span></p>
+                <p style='color: #1a202c !important;'><strong style='color: #4c51bf !important;'>Codon Position:</strong> <span style='color: #1a202c !important;'>{analysis['codon_position']}</span></p>
+                """, unsafe_allow_html=True)
+            
             if 'original_aa' in analysis:
-                st.write(f"**Amino Acid Change:** {analysis['original_aa']} → {analysis['mutated_aa']}")
+                st.markdown(f"""
+                <p style='color: #1a202c !important;'><strong style='color: #4c51bf !important;'>Amino Acid Change:</strong> <span style='color: #1a202c !important;'>{analysis['original_aa']} → {analysis['mutated_aa']}</span></p>
+                """, unsafe_allow_html=True)
+            
             st.markdown("</div>", unsafe_allow_html=True)
         
         with col2:
             st.markdown("### 🎯 Sequence Context")
             st.markdown("<div class='info-box'>", unsafe_allow_html=True)
-            st.write(f"**Accession:** {accession}")
-            st.write(f"**Sequence Length:** {len(sequence)} bp")
+            st.markdown(f"""
+            <p style='color: #1a202c !important;'><strong style='color: #4c51bf !important;'>Accession:</strong> <span style='color: #1a202c !important;'>{accession}</span></p>
+            <p style='color: #1a202c !important;'><strong style='color: #4c51bf !important;'>Sequence Length:</strong> <span style='color: #1a202c !important;'>{len(sequence)} bp</span></p>
+            """, unsafe_allow_html=True)
+            
             if 'context' in analysis:
-                st.write(f"**Local Context:** ...{analysis['context']}...")
+                st.markdown(f"""
+                <p style='color: #1a202c !important;'><strong style='color: #4c51bf !important;'>Local Context:</strong> <code style='color: #1a202c !important; background: #f7fafc; padding: 2px 6px; border-radius: 3px;'>...{analysis['context']}...</code></p>
+                """, unsafe_allow_html=True)
+            
             if cds_location:
-                st.write(f"**CDS Location:** {cds_location}")
+                st.markdown(f"""
+                <p style='color: #1a202c !important;'><strong style='color: #4c51bf !important;'>CDS Location:</strong> <span style='color: #1a202c !important;'>{cds_location}</span></p>
+                """, unsafe_allow_html=True)
+            
             st.markdown("</div>", unsafe_allow_html=True)
         
         st.markdown("---")
@@ -590,7 +630,12 @@ def main():
             
             pre_context = sequence[start:idx]
             post_context = sequence[idx+1:end]
-            highlighted_base = f'<span class="mutation-highlight">{alt}</span>'
+            
+            if is_valid:
+                highlighted_base = f'<span class="mutation-highlight">{alt}</span>'
+            else:
+                highlighted_base = f'<span class="mutation-highlight" style="background: #ffa500;">{actual_base}</span>'
+            
             display_seq = pre_context + highlighted_base + post_context
         
         st.markdown(f"<div class='sequence-container'>{display_seq}</div>", unsafe_allow_html=True)
@@ -607,7 +652,7 @@ def main():
                 data=download_content,
                 file_name=f"mutated_{accession}_{position}_{ref}_{alt}.fasta",
                 mime="text/plain",
-                use_container_width=True
+                width="stretch"
             )
         
         st.session_state.analysis_history.append({
@@ -616,14 +661,15 @@ def main():
             'accession': accession,
             'position': position,
             'change': f"{ref}>{alt}",
-            'effect': analysis.get('effect', 'N/A')
+            'effect': analysis.get('effect', 'N/A'),
+            'validation': 'PASS' if is_valid else 'FAIL'
         })
     
     if st.session_state.analysis_history:
         st.markdown("---")
         st.subheader("📜 Analysis History")
         df = pd.DataFrame(st.session_state.analysis_history)
-        st.dataframe(df, use_container_width=True, hide_index=True)
+        st.dataframe(df, width="stretch", hide_index=True)
 
 if __name__ == "__main__":
     main()
