@@ -72,10 +72,14 @@ def apply_custom_css():
     
     .subtitle {
         text-align: center;
-        color: #ffffff;
+        color: #ffffff !important;
         font-size: 1.2rem;
         margin-bottom: 30px;
         text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    }
+    
+    .subtitle * {
+        color: #ffffff !important;
     }
     
     .stTextInput input {
@@ -146,7 +150,7 @@ def apply_custom_css():
         box-shadow: 0 5px 15px rgba(0,0,0,0.1);
     }
     
-    .info-box p, .info-box div, .info-box span, .info-box li {
+    .info-box p, .info-box div, .info-box span, .info-box li, .info-box ul, .info-box code {
         color: #1a202c !important;
     }
     
@@ -434,7 +438,7 @@ def main():
     apply_custom_css()
     
     st.markdown("<h1>🧬 Mutation Analyzer</h1>", unsafe_allow_html=True)
-    st.markdown("<p class='subtitle'>Advanced DNA Mutation Analysis & Visualization Platform</p>", unsafe_allow_html=True)
+    st.markdown("<p class='subtitle'>¡Joder, por qué no le pedí a Dima que hiciera esta página antes?</p>", unsafe_allow_html=True)
     
     if 'analysis_history' not in st.session_state:
         st.session_state.analysis_history = []
