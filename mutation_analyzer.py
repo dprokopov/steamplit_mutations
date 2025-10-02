@@ -134,28 +134,48 @@ def apply_custom_css():
         box-shadow: inset 0 2px 10px rgba(0,0,0,0.1);
         max-height: 400px;
         overflow-y: auto;
+        color: #2d3748;
     }
     
     .info-box {
-        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        background: linear-gradient(135deg, #e0e7ff 0%, #f3e8ff 100%);
         border-left: 5px solid #667eea;
         border-radius: 10px;
         padding: 20px;
         margin: 15px 0;
         box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        color: #1a202c;
+    }
+    
+    .info-box strong {
+        color: #4c51bf;
     }
     
     .metric-card {
-        background: white;
+        background: linear-gradient(135deg, #ffffff 0%, #f7fafc 100%);
         border-radius: 15px;
         padding: 20px;
         text-align: center;
         box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         transition: transform 0.3s ease;
+        border: 2px solid #e2e8f0;
     }
     
     .metric-card:hover {
         transform: translateY(-5px);
+    }
+    
+    .metric-card .metric-label {
+        color: #718096;
+        font-size: 0.9rem;
+        font-weight: 600;
+        margin-bottom: 8px;
+    }
+    
+    .metric-card .metric-value {
+        color: #2d3748;
+        font-size: 1.5rem;
+        font-weight: 700;
     }
     
     .stDownloadButton button {
@@ -168,21 +188,37 @@ def apply_custom_css():
     }
     
     .warning-box {
-        background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
-        color: white;
+        background: linear-gradient(135deg, #fed7e2 0%, #feebc8 100%);
+        color: #742a2a;
         padding: 15px;
         border-radius: 10px;
         margin: 10px 0;
         font-weight: 500;
+        border-left: 5px solid #f56565;
     }
     
     .success-box {
-        background: linear-gradient(135deg, #13f1fc 0%, #0470dc 100%);
-        color: white;
+        background: linear-gradient(135deg, #c6f6d5 0%, #9ae6b4 100%);
+        color: #22543d;
         padding: 15px;
         border-radius: 10px;
         margin: 10px 0;
         font-weight: 500;
+        border-left: 5px solid #48bb78;
+    }
+    
+    .stMetric {
+        background: transparent !important;
+    }
+    
+    .stMetric label {
+        color: #718096 !important;
+        font-weight: 600 !important;
+    }
+    
+    .stMetric [data-testid="stMetricValue"] {
+        color: #2d3748 !important;
+        font-weight: 700 !important;
     }
     </style>
     """, unsafe_allow_html=True)
@@ -200,12 +236,13 @@ def parse_mutation_input(input_text):
     for pattern in patterns:
         match = re.search(pattern, input_text, re.IGNORECASE)
         if match:
+            coord_type = 'coding' if ':c.' in input_text else 'genomic'
             return {
                 'accession': match.group(1),
                 'position': int(match.group(2)),
                 'ref': match.group(3).upper(),
                 'alt': match.group(4).upper(),
-                'type': 'coding' if 'c.' in input_text else 'genomic'
+                'type': coord_type
             }
     
     gene_pattern = r'([A-Z0-9]+).*c\.(\d+)([ACGT])>([ACGT])'
@@ -255,15 +292,36 @@ def search_gene_accession(gene_name):
         pass
     return None
 
-def fetch_sequence(accession):
+def fetch_genbank_record(accession):
     try:
-        handle = Entrez.efetch(db="nucleotide", id=accession, rettype="fasta", retmode="text")
-        seq_record = SeqIO.read(handle, "fasta")
+        handle = Entrez.efetch(db="nucleotide", id=accession, rettype="gb", retmode="text")
+        seq_record = SeqIO.read(handle, "genbank")
         handle.close()
-        return str(seq_record.seq)
+        return seq_record
     except Exception as e:
-        st.error(f"Error fetching sequence: {str(e)}")
+        st.error(f"Error fetching GenBank record: {str(e)}")
         return None
+
+def extract_cds_sequence(genbank_record):
+    for feature in genbank_record.features:
+        if feature.type == "CDS":
+            try:
+                cds_seq = feature.extract(genbank_record.seq)
+                return str(cds_seq), feature.location
+            except:
+                pass
+    return None, None
+
+def get_sequence_for_mutation(genbank_record, mutation_type):
+    if mutation_type == 'coding':
+        cds_seq, cds_location = extract_cds_sequence(genbank_record)
+        if cds_seq:
+            return cds_seq, 'CDS', cds_location
+        else:
+            st.warning("CDS not found in record, using full sequence")
+            return str(genbank_record.seq), 'Full', None
+    else:
+        return str(genbank_record.seq), 'Genomic', None
 
 def highlight_mutation(sequence, position, ref, alt):
     if position < 1 or position > len(sequence):
@@ -280,6 +338,10 @@ def analyze_mutation(sequence, position, ref, alt):
     analysis = {}
     
     idx = position - 1
+    
+    if idx < 0 or idx >= len(sequence):
+        analysis['validation'] = '❌ Position out of range'
+        return analysis
     
     if sequence[idx].upper() == ref.upper():
         analysis['validation'] = '✅ Reference allele matches'
@@ -330,13 +392,13 @@ def analyze_mutation(sequence, position, ref, alt):
         analysis['mutated_aa'] = mutated_aa
         
         if original_aa == mutated_aa:
-            analysis['effect'] = 'Synonymous (Silent)'
+            analysis['effect'] = 'Synonymous'
         elif mutated_aa == '*':
-            analysis['effect'] = 'Nonsense (Stop gain)'
+            analysis['effect'] = 'Nonsense'
         elif original_aa == '*':
-            analysis['effect'] = 'Readthrough (Stop loss)'
+            analysis['effect'] = 'Readthrough'
         else:
-            analysis['effect'] = 'Missense (Amino acid change)'
+            analysis['effect'] = 'Missense'
     
     context_start = max(0, idx - 10)
     context_end = min(len(sequence), idx + 11)
@@ -359,7 +421,7 @@ def main():
     apply_custom_css()
     
     st.markdown("<h1>🧬 Mutation Analyzer</h1>", unsafe_allow_html=True)
-    st.markdown("<p class='subtitle'>Advanced DNA Mutation Analysis & Visualization Platform</p>", unsafe_allow_html=True)
+    st.markdown("<p class='subtitle'>¡Joder, por qué no le pedí a Dima que hiciera esta página antes?</p>", unsafe_allow_html=True)
     
     if 'analysis_history' not in st.session_state:
         st.session_state.analysis_history = []
@@ -369,8 +431,8 @@ def main():
     with col1:
         mutation_input = st.text_input(
             "Enter Mutation Identifier",
-            placeholder="e.g., NM_001261.4:c.208C>T or CDK9 c.208C>T",
-            help="Supports multiple formats: NM_xxx:c.xxx, NC_xxx:g.xxx, GeneName c.xxx"
+            placeholder="e.g., NM_022552.5:c.2688A>G or CDK9 c.208C>T",
+            help="Supports multiple formats: NM_xxx:c.xxx (CDS), NC_xxx:g.xxx (genomic), GeneName c.xxx"
         )
     
     with col2:
@@ -381,16 +443,18 @@ def main():
     st.markdown("<div class='info-box'>", unsafe_allow_html=True)
     st.markdown("""
     **Supported Formats:**
-    - `NM_001261.4:c.208C>T` - RefSeq with coding position
+    - `NM_022552.5:c.2688A>G` - RefSeq with **coding sequence** position (CDS)
     - `NC_000009.11:g.130549830C>T` - Genomic position
-    - `CDK9 c.208C>T` - Gene name with mutation
-    - `c.208C>T` - Position only (requires context)
+    - `CDK9 c.208C>T` - Gene name with CDS mutation
+    - `c.208C>T` - CDS position only (requires context)
+    
+    **Note:** c. = coding sequence (CDS), g. = genomic coordinates
     """)
     st.markdown("</div>", unsafe_allow_html=True)
     
     if analyze_button and mutation_input:
         with st.spinner("🔍 Parsing mutation..."):
-            time.sleep(0.5)
+            time.sleep(0.3)
             mutation_data = parse_mutation_input(mutation_input)
         
         if not mutation_data:
@@ -415,14 +479,25 @@ def main():
             st.warning("No accession or gene provided. Please specify a complete mutation identifier.")
             return
         
-        with st.spinner(f"📥 Fetching sequence for {accession}..."):
-            sequence = fetch_sequence(accession)
+        with st.spinner(f"📥 Fetching GenBank record for {accession}..."):
+            genbank_record = fetch_genbank_record(accession)
         
-        if not sequence:
-            st.error("Failed to fetch sequence from NCBI")
+        if not genbank_record:
+            st.error("Failed to fetch GenBank record from NCBI")
             return
         
-        st.success(f"✅ Retrieved sequence: {len(sequence)} bp")
+        st.success(f"✅ Retrieved GenBank record: {len(genbank_record.seq)} bp")
+        
+        mutation_type = mutation_data.get('type', 'coding')
+        
+        sequence, seq_type, cds_location = get_sequence_for_mutation(genbank_record, mutation_type)
+        
+        if seq_type == 'CDS':
+            st.info(f"📍 Working with CDS sequence: {len(sequence)} bp")
+        elif seq_type == 'Genomic':
+            st.info(f"📍 Working with genomic sequence: {len(sequence)} bp")
+        else:
+            st.info(f"📍 Working with full sequence: {len(sequence)} bp")
         
         position = mutation_data['position']
         ref = mutation_data['ref']
@@ -441,24 +516,36 @@ def main():
         col1, col2, col3, col4 = st.columns(4)
         
         with col1:
-            st.markdown("<div class='metric-card'>", unsafe_allow_html=True)
-            st.metric("Position", f"{position}")
-            st.markdown("</div>", unsafe_allow_html=True)
+            st.markdown("""
+                <div class='metric-card'>
+                    <div class='metric-label'>Position</div>
+                    <div class='metric-value'>""" + str(position) + """</div>
+                </div>
+            """, unsafe_allow_html=True)
         
         with col2:
-            st.markdown("<div class='metric-card'>", unsafe_allow_html=True)
-            st.metric("Change", f"{ref}>{alt}")
-            st.markdown("</div>", unsafe_allow_html=True)
+            st.markdown("""
+                <div class='metric-card'>
+                    <div class='metric-label'>Change</div>
+                    <div class='metric-value'>""" + f"{ref}>{alt}" + """</div>
+                </div>
+            """, unsafe_allow_html=True)
         
         with col3:
-            st.markdown("<div class='metric-card'>", unsafe_allow_html=True)
-            st.metric("Type", analysis.get('mutation_type', 'N/A'))
-            st.markdown("</div>", unsafe_allow_html=True)
+            st.markdown("""
+                <div class='metric-card'>
+                    <div class='metric-label'>Type</div>
+                    <div class='metric-value'>""" + analysis.get('mutation_type', 'N/A') + """</div>
+                </div>
+            """, unsafe_allow_html=True)
         
         with col4:
-            st.markdown("<div class='metric-card'>", unsafe_allow_html=True)
-            st.metric("Effect", analysis.get('effect', 'N/A'))
-            st.markdown("</div>", unsafe_allow_html=True)
+            st.markdown("""
+                <div class='metric-card'>
+                    <div class='metric-label'>Effect</div>
+                    <div class='metric-value'>""" + analysis.get('effect', 'N/A') + """</div>
+                </div>
+            """, unsafe_allow_html=True)
         
         st.markdown("---")
         
@@ -468,6 +555,7 @@ def main():
             st.markdown("### 🧪 Molecular Details")
             st.markdown("<div class='info-box'>", unsafe_allow_html=True)
             st.write(f"**Validation:** {analysis['validation']}")
+            st.write(f"**Sequence Type:** {seq_type}")
             if 'original_codon' in analysis:
                 st.write(f"**Original Codon:** {analysis['original_codon']}")
                 st.write(f"**Mutated Codon:** {analysis['mutated_codon']}")
@@ -483,6 +571,8 @@ def main():
             st.write(f"**Sequence Length:** {len(sequence)} bp")
             if 'context' in analysis:
                 st.write(f"**Local Context:** ...{analysis['context']}...")
+            if cds_location:
+                st.write(f"**CDS Location:** {cds_location}")
             st.markdown("</div>", unsafe_allow_html=True)
         
         st.markdown("---")
