@@ -38,7 +38,7 @@ def apply_custom_css():
     }
     
     div[data-testid="stVerticalBlock"] > div:has(div.element-container) {
-        background: rgba(255, 255, 255, 0.98);
+        background: rgba(255, 255, 255, 0.95);
         backdrop-filter: blur(10px);
         border-radius: 20px;
         padding: 30px;
@@ -59,50 +59,46 @@ def apply_custom_css():
     }
     
     h1 {
-        background: linear-gradient(120deg, #667eea, #764ba2);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
+        background: white;
+        color: #667eea;
         font-weight: 700;
         font-size: 3rem !important;
         text-align: center;
-        margin-bottom: 10px;
+        margin-bottom: 20px;
+        padding: 20px;
+        border-radius: 15px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.3);
         animation: titlePulse 3s ease-in-out infinite;
-        position: relative;
     }
     
-    h1::before {
-        content: '';
-        position: absolute;
-        top: -10px;
-        left: -20px;
-        right: -20px;
-        bottom: -10px;
-        background: rgba(255, 255, 255, 0.95);
-        border-radius: 20px;
-        z-index: -1;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    h2, h3 {
+        color: #2d3748 !important;
+        font-weight: 700 !important;
+        background: rgba(255, 255, 255, 0.9);
+        padding: 10px 15px !important;
+        border-radius: 10px !important;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.1) !important;
     }
     
     @keyframes titlePulse {
-        0%, 100% { opacity: 1; }
-        50% { opacity: 0.8; }
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.95; transform: scale(1.02); }
     }
     
     .subtitle {
         text-align: center;
-        color: #ffffff !important;
+        color: #1a202c !important;
         font-size: 1.2rem;
         margin-bottom: 30px;
-        text-shadow: 3px 3px 8px rgba(0,0,0,0.6);
-        background: rgba(0, 0, 0, 0.3);
-        padding: 15px;
-        border-radius: 15px;
-        backdrop-filter: blur(10px);
+        background: rgba(255, 255, 255, 0.95);
+        padding: 15px 30px;
+        border-radius: 10px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        font-weight: 600;
     }
     
     .subtitle * {
-        color: #ffffff !important;
+        color: #1a202c !important;
     }
     
     .stTextInput input {
@@ -151,63 +147,76 @@ def apply_custom_css():
     }
     
     .sequence-container {
-        background: #f8f9fa;
+        background: white;
         border-radius: 15px;
-        padding: 20px;
+        padding: 25px;
         font-family: 'Courier New', monospace;
-        font-size: 14px;
-        line-height: 1.8;
+        font-size: 15px;
+        line-height: 2;
         word-wrap: break-word;
-        box-shadow: inset 0 2px 10px rgba(0,0,0,0.1);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
         max-height: 400px;
         overflow-y: auto;
-        color: #2d3748;
+        color: #1a202c;
+        border: 2px solid #e2e8f0;
     }
     
     .info-box {
-        background: rgba(255, 255, 255, 0.98) !important;
-        border-left: 5px solid #667eea;
+        background: white;
+        border-left: 8px solid #667eea;
         border-radius: 15px;
         padding: 25px;
-        margin: 20px 0;
-        box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-        backdrop-filter: blur(10px);
+        margin: 15px 0;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.2);
     }
     
     .info-box p, .info-box div, .info-box span, .info-box li, .info-box ul, .info-box code {
         color: #1a202c !important;
+        font-size: 1rem;
     }
     
     .info-box strong {
-        color: #4c51bf !important;
+        color: #667eea !important;
         font-weight: 700 !important;
+        font-size: 1.05rem;
+    }
+    
+    .info-box code {
+        background: #f7fafc !important;
+        padding: 3px 8px !important;
+        border-radius: 5px !important;
+        border: 1px solid #e2e8f0 !important;
+        font-family: 'Courier New', monospace !important;
     }
     
     .metric-card {
-        background: linear-gradient(135deg, #ffffff 0%, #f7fafc 100%);
+        background: white;
         border-radius: 15px;
-        padding: 20px;
+        padding: 25px;
         text-align: center;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         transition: transform 0.3s ease;
-        border: 2px solid #e2e8f0;
+        border: 3px solid #e2e8f0;
     }
     
     .metric-card:hover {
         transform: translateY(-5px);
+        border-color: #667eea;
     }
     
     .metric-card .metric-label {
         color: #718096;
-        font-size: 0.9rem;
-        font-weight: 600;
-        margin-bottom: 8px;
+        font-size: 0.95rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
     }
     
     .metric-card .metric-value {
-        color: #2d3748;
-        font-size: 1.5rem;
-        font-weight: 700;
+        color: #667eea;
+        font-size: 1.8rem;
+        font-weight: 800;
     }
     
     .stDownloadButton button {
@@ -220,47 +229,54 @@ def apply_custom_css():
     }
     
     .warning-box {
-        background: linear-gradient(135deg, #fed7e2 0%, #feebc8 100%);
-        color: #742a2a;
-        padding: 15px;
-        border-radius: 10px;
-        margin: 10px 0;
-        font-weight: 500;
-        border-left: 5px solid #f56565;
+        background: #fff5f5;
+        color: #c53030;
+        padding: 20px;
+        border-radius: 12px;
+        margin: 15px 0;
+        font-weight: 600;
+        border: 3px solid #fc8181;
+        box-shadow: 0 5px 20px rgba(197, 48, 48, 0.2);
+        font-size: 1.05rem;
     }
     
     .success-box {
-        background: linear-gradient(135deg, #c6f6d5 0%, #9ae6b4 100%);
+        background: #f0fff4;
         color: #22543d;
-        padding: 15px;
-        border-radius: 10px;
-        margin: 10px 0;
-        font-weight: 500;
-        border-left: 5px solid #48bb78;
+        padding: 20px;
+        border-radius: 12px;
+        margin: 15px 0;
+        font-weight: 600;
+        border: 3px solid #48bb78;
+        box-shadow: 0 5px 20px rgba(72, 187, 120, 0.2);
+        font-size: 1.05rem;
     }
     
     .validation-highlight {
-        background: #fef5e7;
-        border: 2px solid #f39c12;
-        border-radius: 8px;
-        padding: 12px;
-        margin: 10px 0;
-        color: #7d6608 !important;
+        background: #fffaf0;
+        border: 3px solid #ed8936;
+        border-radius: 12px;
+        padding: 20px;
+        margin: 15px 0;
+        color: #7c2d12 !important;
         font-weight: 600;
+        box-shadow: 0 5px 20px rgba(237, 137, 54, 0.2);
+        font-size: 1.05rem;
+    }
+    
+    .stMarkdown {
+        color: #1a202c !important;
     }
     
     .stMarkdown p, .stMarkdown div, .stMarkdown span {
         color: #1a202c !important;
     }
     
-    .main > div > div > div > .stMarkdown {
-        color: #ffffff !important;
-    }
-    
-    .main > div > div > div > .stMarkdown p,
-    .main > div > div > div > .stMarkdown div,
-    .main > div > div > div > .stMarkdown span {
-        color: #ffffff !important;
+    div[data-testid="stVerticalBlock"] .stMarkdown {
+        background: rgba(255, 255, 255, 0.95);
+        padding: 15px;
+        border-radius: 10px;
+        margin: 10px 0;
     }
     </style>
     """, unsafe_allow_html=True)
@@ -472,7 +488,7 @@ def main():
     apply_custom_css()
     
     st.markdown("<h1>🧬 Mutation Analyzer</h1>", unsafe_allow_html=True)
-    st.markdown("<div class='subtitle'><p style='margin: 0; color: #ffffff !important; font-size: 1.2rem;'>Advanced DNA Mutation Analysis & Visualization Platform</p></div>", unsafe_allow_html=True)
+    st.markdown("<p class='subtitle'>Advanced DNA Mutation Analysis & Visualization Platform</p>", unsafe_allow_html=True)
     
     if 'analysis_history' not in st.session_state:
         st.session_state.analysis_history = []
@@ -493,16 +509,14 @@ def main():
     
     st.markdown("<div class='info-box'>", unsafe_allow_html=True)
     st.markdown("""
-    <div style='color: #1a202c !important;'>
-    <p style='color: #1a202c !important; margin-bottom: 10px;'><strong style='color: #4c51bf !important; font-size: 1.1rem;'>Supported Formats:</strong></p>
-    <ul style='color: #1a202c !important; margin-left: 20px;'>
-    <li style='color: #1a202c !important; margin: 5px 0;'><code style='background: #f7fafc; padding: 2px 8px; border-radius: 4px; color: #2d3748;'>NM_022552.5:c.2688A>G</code> - RefSeq with <strong style='color: #4c51bf !important;'>coding sequence</strong> position (CDS)</li>
-    <li style='color: #1a202c !important; margin: 5px 0;'><code style='background: #f7fafc; padding: 2px 8px; border-radius: 4px; color: #2d3748;'>NC_000009.11:g.130549830C>T</code> - Genomic position</li>
-    <li style='color: #1a202c !important; margin: 5px 0;'><code style='background: #f7fafc; padding: 2px 8px; border-radius: 4px; color: #2d3748;'>CDK9 c.208C>T</code> - Gene name with CDS mutation</li>
-    <li style='color: #1a202c !important; margin: 5px 0;'><code style='background: #f7fafc; padding: 2px 8px; border-radius: 4px; color: #2d3748;'>c.208C>T</code> - CDS position only (requires context)</li>
+    <p style='color: #1a202c !important;'><strong style='color: #4c51bf !important;'>Supported Formats:</strong></p>
+    <ul style='color: #1a202c !important;'>
+    <li><code>NM_022552.5:c.2688A>G</code> - RefSeq with <strong>coding sequence</strong> position (CDS)</li>
+    <li><code>NC_000009.11:g.130549830C>T</code> - Genomic position</li>
+    <li><code>CDK9 c.208C>T</code> - Gene name with CDS mutation</li>
+    <li><code>c.208C>T</code> - CDS position only (requires context)</li>
     </ul>
-    <p style='color: #1a202c !important; margin-top: 15px;'><strong style='color: #4c51bf !important;'>Note:</strong> <span style='color: #1a202c !important;'>c. = coding sequence (CDS), g. = genomic coordinates</span></p>
-    </div>
+    <p style='color: #1a202c !important;'><strong style='color: #4c51bf !important;'>Note:</strong> c. = coding sequence (CDS), g. = genomic coordinates</p>
     """, unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
     
