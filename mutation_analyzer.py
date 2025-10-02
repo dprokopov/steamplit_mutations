@@ -33,8 +33,12 @@ def apply_custom_css():
         background: transparent;
     }
     
+    .stApp > div > div > div > div {
+        color: #ffffff;
+    }
+    
     div[data-testid="stVerticalBlock"] > div:has(div.element-container) {
-        background: rgba(255, 255, 255, 0.95);
+        background: rgba(255, 255, 255, 0.98);
         backdrop-filter: blur(10px);
         border-radius: 20px;
         padding: 30px;
@@ -58,11 +62,26 @@ def apply_custom_css():
         background: linear-gradient(120deg, #667eea, #764ba2);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
+        background-clip: text;
         font-weight: 700;
         font-size: 3rem !important;
         text-align: center;
         margin-bottom: 10px;
         animation: titlePulse 3s ease-in-out infinite;
+        position: relative;
+    }
+    
+    h1::before {
+        content: '';
+        position: absolute;
+        top: -10px;
+        left: -20px;
+        right: -20px;
+        bottom: -10px;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
+        z-index: -1;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
     }
     
     @keyframes titlePulse {
@@ -75,7 +94,11 @@ def apply_custom_css():
         color: #ffffff !important;
         font-size: 1.2rem;
         margin-bottom: 30px;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        text-shadow: 3px 3px 8px rgba(0,0,0,0.6);
+        background: rgba(0, 0, 0, 0.3);
+        padding: 15px;
+        border-radius: 15px;
+        backdrop-filter: blur(10px);
     }
     
     .subtitle * {
@@ -142,12 +165,13 @@ def apply_custom_css():
     }
     
     .info-box {
-        background: linear-gradient(135deg, #e0e7ff 0%, #f3e8ff 100%);
+        background: rgba(255, 255, 255, 0.98) !important;
         border-left: 5px solid #667eea;
-        border-radius: 10px;
-        padding: 20px;
-        margin: 15px 0;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        border-radius: 15px;
+        padding: 25px;
+        margin: 20px 0;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        backdrop-filter: blur(10px);
     }
     
     .info-box p, .info-box div, .info-box span, .info-box li, .info-box ul, .info-box code {
@@ -227,6 +251,16 @@ def apply_custom_css():
     
     .stMarkdown p, .stMarkdown div, .stMarkdown span {
         color: #1a202c !important;
+    }
+    
+    .main > div > div > div > .stMarkdown {
+        color: #ffffff !important;
+    }
+    
+    .main > div > div > div > .stMarkdown p,
+    .main > div > div > div > .stMarkdown div,
+    .main > div > div > div > .stMarkdown span {
+        color: #ffffff !important;
     }
     </style>
     """, unsafe_allow_html=True)
@@ -438,7 +472,7 @@ def main():
     apply_custom_css()
     
     st.markdown("<h1>🧬 Mutation Analyzer</h1>", unsafe_allow_html=True)
-    st.markdown("<p class='subtitle'>¡Joder, por qué no le pedí a Dima que hiciera esta página antes?</p>", unsafe_allow_html=True)
+    st.markdown("<div class='subtitle'><p style='margin: 0; color: #ffffff !important; font-size: 1.2rem;'>Advanced DNA Mutation Analysis & Visualization Platform</p></div>", unsafe_allow_html=True)
     
     if 'analysis_history' not in st.session_state:
         st.session_state.analysis_history = []
@@ -459,14 +493,16 @@ def main():
     
     st.markdown("<div class='info-box'>", unsafe_allow_html=True)
     st.markdown("""
-    <p style='color: #1a202c !important;'><strong style='color: #4c51bf !important;'>Supported Formats:</strong></p>
-    <ul style='color: #1a202c !important;'>
-    <li><code>NM_022552.5:c.2688A>G</code> - RefSeq with <strong>coding sequence</strong> position (CDS)</li>
-    <li><code>NC_000009.11:g.130549830C>T</code> - Genomic position</li>
-    <li><code>CDK9 c.208C>T</code> - Gene name with CDS mutation</li>
-    <li><code>c.208C>T</code> - CDS position only (requires context)</li>
+    <div style='color: #1a202c !important;'>
+    <p style='color: #1a202c !important; margin-bottom: 10px;'><strong style='color: #4c51bf !important; font-size: 1.1rem;'>Supported Formats:</strong></p>
+    <ul style='color: #1a202c !important; margin-left: 20px;'>
+    <li style='color: #1a202c !important; margin: 5px 0;'><code style='background: #f7fafc; padding: 2px 8px; border-radius: 4px; color: #2d3748;'>NM_022552.5:c.2688A>G</code> - RefSeq with <strong style='color: #4c51bf !important;'>coding sequence</strong> position (CDS)</li>
+    <li style='color: #1a202c !important; margin: 5px 0;'><code style='background: #f7fafc; padding: 2px 8px; border-radius: 4px; color: #2d3748;'>NC_000009.11:g.130549830C>T</code> - Genomic position</li>
+    <li style='color: #1a202c !important; margin: 5px 0;'><code style='background: #f7fafc; padding: 2px 8px; border-radius: 4px; color: #2d3748;'>CDK9 c.208C>T</code> - Gene name with CDS mutation</li>
+    <li style='color: #1a202c !important; margin: 5px 0;'><code style='background: #f7fafc; padding: 2px 8px; border-radius: 4px; color: #2d3748;'>c.208C>T</code> - CDS position only (requires context)</li>
     </ul>
-    <p style='color: #1a202c !important;'><strong style='color: #4c51bf !important;'>Note:</strong> c. = coding sequence (CDS), g. = genomic coordinates</p>
+    <p style='color: #1a202c !important; margin-top: 15px;'><strong style='color: #4c51bf !important;'>Note:</strong> <span style='color: #1a202c !important;'>c. = coding sequence (CDS), g. = genomic coordinates</span></p>
+    </div>
     """, unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
     
