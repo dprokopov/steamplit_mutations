@@ -924,7 +924,7 @@ def main():
     apply_custom_css()
     
     st.markdown("<h1>🧬 Mutation Analyzer</h1>", unsafe_allow_html=True)
-    st.markdown("<p class='subtitle'>Comprehensive genomic variant analysis tool</p>", unsafe_allow_html=True)
+    st.markdown("<p class='subtitle'>¡Joder, por qué no le pedí a Dima que hiciera esta página antes?</p>", unsafe_allow_html=True)
     
     if 'analysis_history' not in st.session_state:
         st.session_state.analysis_history = []
