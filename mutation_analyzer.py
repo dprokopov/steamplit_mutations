@@ -13,7 +13,7 @@ Entrez.email = "mutation.analyzer@example.com"
 def apply_custom_css():
     st.markdown("""
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
     
     * {
         font-family: 'Inter', sans-serif;
@@ -21,268 +21,287 @@ def apply_custom_css():
     
     .main {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        animation: gradientShift 15s ease infinite;
-    }
-    
-    @keyframes gradientShift {
-        0%, 100% { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-        50% { background: linear-gradient(135deg, #764ba2 0%, #667eea 100%); }
     }
     
     .stApp {
         background: transparent;
     }
     
-    .stApp > div > div > div > div {
-        color: #ffffff;
-    }
-    
     div[data-testid="stVerticalBlock"] > div:has(div.element-container) {
-        background: rgba(255, 255, 255, 0.95);
+        background: rgba(255, 255, 255, 0.98);
         backdrop-filter: blur(10px);
-        border-radius: 20px;
-        padding: 30px;
-        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        border-radius: 16px;
+        padding: 32px;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.1);
         margin: 20px 0;
-        animation: fadeInUp 0.6s ease;
-    }
-    
-    @keyframes fadeInUp {
-        from {
-            opacity: 0;
-            transform: translateY(30px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
     }
     
     h1 {
         background: white;
         color: #667eea;
         font-weight: 700;
-        font-size: 3rem !important;
+        font-size: 2.5rem !important;
         text-align: center;
-        margin-bottom: 20px;
-        padding: 20px;
-        border-radius: 15px;
-        box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-        animation: titlePulse 3s ease-in-out infinite;
+        margin-bottom: 16px;
+        padding: 24px;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
     }
     
     h2, h3 {
         color: #2d3748 !important;
-        font-weight: 700 !important;
-        background: rgba(255, 255, 255, 0.9);
-        padding: 10px 15px !important;
-        border-radius: 10px !important;
-        box-shadow: 0 3px 10px rgba(0,0,0,0.1) !important;
-    }
-    
-    @keyframes titlePulse {
-        0%, 100% { opacity: 1; transform: scale(1); }
-        50% { opacity: 0.95; transform: scale(1.02); }
+        font-weight: 600 !important;
+        margin-top: 24px !important;
+        margin-bottom: 16px !important;
     }
     
     .subtitle {
         text-align: center;
-        color: #1a202c !important;
-        font-size: 1.2rem;
-        margin-bottom: 30px;
+        color: #2d3748 !important;
+        font-size: 1rem;
+        margin-bottom: 24px;
         background: rgba(255, 255, 255, 0.95);
-        padding: 15px 30px;
-        border-radius: 10px;
-        box-shadow: 0 5px 20px rgba(0,0,0,0.2);
-        font-weight: 600;
-    }
-    
-    .subtitle * {
-        color: #1a202c !important;
+        padding: 12px 24px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        font-weight: 500;
     }
     
     .stTextInput input {
-        border-radius: 15px;
-        border: 2px solid #667eea;
-        padding: 15px;
-        font-size: 1rem;
-        transition: all 0.3s ease;
+        border-radius: 8px;
+        border: 2px solid #e2e8f0;
+        padding: 12px 16px;
+        font-size: 0.95rem;
+        transition: all 0.2s ease;
+        color: #2d3748;
     }
     
     .stTextInput input:focus {
-        border-color: #764ba2;
-        box-shadow: 0 0 20px rgba(118, 75, 162, 0.3);
-        transform: scale(1.02);
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
     }
     
     .stButton button {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         color: white;
         border: none;
-        border-radius: 15px;
-        padding: 15px 40px;
-        font-size: 1.1rem;
+        border-radius: 8px;
+        padding: 12px 32px;
+        font-size: 1rem;
         font-weight: 600;
-        transition: all 0.3s ease;
-        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        transition: all 0.2s ease;
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
     }
     
     .stButton button:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 15px 40px rgba(102, 126, 234, 0.6);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
     }
     
     .mutation-highlight {
-        background: linear-gradient(120deg, #f093fb 0%, #f5576c 100%);
+        background: #f56565;
         color: white;
         padding: 2px 6px;
-        border-radius: 5px;
-        font-weight: bold;
-        animation: glow 2s ease-in-out infinite;
-    }
-    
-    @keyframes glow {
-        0%, 100% { box-shadow: 0 0 10px rgba(245, 87, 108, 0.5); }
-        50% { box-shadow: 0 0 20px rgba(245, 87, 108, 0.8); }
+        border-radius: 4px;
+        font-weight: 600;
     }
     
     .sequence-container {
-        background: white;
-        border-radius: 15px;
-        padding: 25px;
+        background: #f7fafc;
+        border-radius: 8px;
+        padding: 20px;
         font-family: 'Courier New', monospace;
-        font-size: 15px;
-        line-height: 2;
+        font-size: 14px;
+        line-height: 1.8;
         word-wrap: break-word;
-        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        box-shadow: inset 0 2px 4px rgba(0,0,0,0.06);
         max-height: 400px;
         overflow-y: auto;
-        color: #1a202c;
-        border: 2px solid #e2e8f0;
+        color: #2d3748;
+        border: 1px solid #e2e8f0;
     }
     
     .info-box {
         background: white;
-        border-left: 8px solid #667eea;
-        border-radius: 15px;
-        padding: 25px;
-        margin: 15px 0;
-        box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        border-left: 4px solid #667eea;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 16px 0;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
     
     .info-box p, .info-box div, .info-box span, .info-box li, .info-box ul, .info-box code {
-        color: #1a202c !important;
-        font-size: 1rem;
+        color: #2d3748 !important;
+        font-size: 0.95rem;
+        line-height: 1.6;
     }
     
     .info-box strong {
         color: #667eea !important;
-        font-weight: 700 !important;
-        font-size: 1.05rem;
+        font-weight: 600 !important;
     }
     
     .info-box code {
         background: #f7fafc !important;
-        padding: 3px 8px !important;
-        border-radius: 5px !important;
+        padding: 2px 6px !important;
+        border-radius: 4px !important;
         border: 1px solid #e2e8f0 !important;
         font-family: 'Courier New', monospace !important;
+        font-size: 0.9rem !important;
+    }
+    
+    .info-box ul {
+        margin: 8px 0;
+        padding-left: 24px;
+    }
+    
+    .info-box li {
+        margin: 4px 0;
     }
     
     .metric-card {
         background: white;
-        border-radius: 15px;
-        padding: 25px;
+        border-radius: 8px;
+        padding: 20px;
         text-align: center;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        transition: transform 0.3s ease;
-        border: 3px solid #e2e8f0;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        transition: transform 0.2s ease;
+        border: 1px solid #e2e8f0;
     }
     
     .metric-card:hover {
-        transform: translateY(-5px);
+        transform: translateY(-2px);
         border-color: #667eea;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
     
     .metric-card .metric-label {
         color: #718096;
-        font-size: 0.95rem;
-        font-weight: 700;
-        margin-bottom: 10px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin-bottom: 8px;
         text-transform: uppercase;
         letter-spacing: 0.5px;
     }
     
     .metric-card .metric-value {
         color: #667eea;
-        font-size: 1.8rem;
-        font-weight: 800;
+        font-size: 1.5rem;
+        font-weight: 700;
     }
     
     .stDownloadButton button {
-        background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
         color: white;
         border: none;
-        border-radius: 15px;
-        padding: 12px 30px;
+        border-radius: 8px;
+        padding: 10px 24px;
         font-weight: 600;
+        box-shadow: 0 2px 8px rgba(72, 187, 120, 0.3);
+    }
+    
+    .stDownloadButton button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(72, 187, 120, 0.4);
     }
     
     .warning-box {
         background: #fff5f5;
         color: #c53030;
-        padding: 20px;
-        border-radius: 12px;
-        margin: 15px 0;
-        font-weight: 600;
-        border: 3px solid #fc8181;
-        box-shadow: 0 5px 20px rgba(197, 48, 48, 0.2);
-        font-size: 1.05rem;
+        padding: 16px;
+        border-radius: 8px;
+        margin: 16px 0;
+        font-weight: 500;
+        border: 2px solid #fc8181;
+        font-size: 0.95rem;
     }
     
     .success-box {
         background: #f0fff4;
         color: #22543d;
-        padding: 20px;
-        border-radius: 12px;
-        margin: 15px 0;
-        font-weight: 600;
-        border: 3px solid #48bb78;
-        box-shadow: 0 5px 20px rgba(72, 187, 120, 0.2);
-        font-size: 1.05rem;
+        padding: 16px;
+        border-radius: 8px;
+        margin: 16px 0;
+        font-weight: 500;
+        border: 2px solid #48bb78;
+        font-size: 0.95rem;
     }
     
     .validation-highlight {
         background: #fffaf0;
-        border: 3px solid #ed8936;
-        border-radius: 12px;
-        padding: 20px;
-        margin: 15px 0;
+        border: 2px solid #ed8936;
+        border-radius: 8px;
+        padding: 16px;
+        margin: 16px 0;
         color: #7c2d12 !important;
-        font-weight: 600;
-        box-shadow: 0 5px 20px rgba(237, 137, 54, 0.2);
-        font-size: 1.05rem;
+        font-weight: 500;
+        font-size: 0.95rem;
     }
     
     .stMarkdown {
-        color: #1a202c !important;
+        color: #2d3748 !important;
     }
     
     .stMarkdown p, .stMarkdown div, .stMarkdown span {
-        color: #1a202c !important;
+        color: #2d3748 !important;
     }
     
-    div[data-testid="stVerticalBlock"] .stMarkdown {
-        background: rgba(255, 255, 255, 0.95);
-        padding: 15px;
-        border-radius: 10px;
-        margin: 10px 0;
+    .stSpinner > div {
+        border-color: #667eea !important;
+    }
+    
+    hr {
+        margin: 32px 0;
+        border: none;
+        border-top: 2px solid #e2e8f0;
+    }
+    
+    .stAlert {
+        border-radius: 8px;
+        padding: 12px 16px;
     }
     </style>
     """, unsafe_allow_html=True)
 
 def parse_mutation_input(input_text):
-    input_text = input_text.strip().replace(" ", "")
+    input_text = input_text.strip()
+    
+    simple_sub_pattern = r'([A-Z0-9_]+(?:\.\d+)?)\(([A-Z0-9]+)\):c\.(\d+)([ACGT])>([ACGT])'
+    match = re.search(simple_sub_pattern, input_text, re.IGNORECASE)
+    if match:
+        return {
+            'accession': match.group(1),
+            'gene': match.group(2),
+            'position': int(match.group(3)),
+            'ref': match.group(4).upper(),
+            'alt': match.group(5).upper(),
+            'type': 'coding'
+        }
+    
+    intronic_pattern = r'([A-Z0-9_]+(?:\.\d+)?)\(([A-Z0-9]+)\):c\.(\d+)([\+\-])(\d+)([ACGT])>([ACGT])'
+    match = re.search(intronic_pattern, input_text, re.IGNORECASE)
+    if match:
+        return {
+            'accession': match.group(1),
+            'gene': match.group(2),
+            'position': int(match.group(3)),
+            'intronic_offset': f"{match.group(4)}{match.group(5)}",
+            'ref': match.group(6).upper(),
+            'alt': match.group(7).upper(),
+            'type': 'intronic'
+        }
+    
+    deletion_pattern = r'([A-Z0-9_]+(?:\.\d+)?)\(([A-Z0-9]+)\):c\.(\d+)([\+\-])?(\d+)?del'
+    match = re.search(deletion_pattern, input_text, re.IGNORECASE)
+    if match:
+        offset = f"{match.group(4)}{match.group(5)}" if match.group(4) else None
+        return {
+            'accession': match.group(1),
+            'gene': match.group(2),
+            'position': int(match.group(3)),
+            'intronic_offset': offset,
+            'type': 'deletion'
+        }
     
     patterns = [
         r'(NM_\d+\.\d+):c\.(\d+)([ACGT])>([ACGT])',
@@ -370,16 +389,53 @@ def extract_cds_sequence(genbank_record):
                 pass
     return None, None
 
-def get_sequence_for_mutation(genbank_record, mutation_type):
+def get_sequence_safely(seq_obj):
+    try:
+        return str(seq_obj)
+    except Exception:
+        return None
+
+def get_sequence_for_mutation(genbank_record, mutation_type, position=None):
     if mutation_type == 'coding':
         cds_seq, cds_location = extract_cds_sequence(genbank_record)
         if cds_seq:
             return cds_seq, 'CDS', cds_location
         else:
             st.warning("CDS not found in record, using full sequence")
-            return str(genbank_record.seq), 'Full', None
+    
+    seq_length = len(genbank_record.seq)
+    
+    if seq_length > 10000000:
+        st.warning(f"⚠️ Large genomic sequence detected ({seq_length:,} bp). Extracting relevant region...")
+        
+        if position:
+            context = 5000
+            start = max(0, position - context)
+            end = min(seq_length, position + context)
+            
+            try:
+                sub_seq = genbank_record.seq[start:end]
+                seq_str = get_sequence_safely(sub_seq)
+                
+                if seq_str:
+                    adjusted_position = position - start
+                    return seq_str, 'Genomic (Region)', None, adjusted_position, start
+                else:
+                    st.error("Unable to extract sequence from large genomic record")
+                    return None, None, None, None, None
+            except Exception as e:
+                st.error(f"Error extracting region: {str(e)}")
+                return None, None, None, None, None
+        else:
+            st.error("Position required to extract from large genomic sequence")
+            return None, None, None, None, None
+    
+    seq_str = get_sequence_safely(genbank_record.seq)
+    if seq_str:
+        return seq_str, 'Genomic', None, None, None
     else:
-        return str(genbank_record.seq), 'Genomic', None
+        st.error("Unable to read sequence from record")
+        return None, None, None, None, None
 
 def highlight_mutation(sequence, position, ref, alt):
     if position < 1 or position > len(sequence):
@@ -389,7 +445,7 @@ def highlight_mutation(sequence, position, ref, alt):
     actual_base = sequence[idx].upper()
     
     if actual_base != ref.upper():
-        highlighted = sequence[:idx] + f'<span class="mutation-highlight" style="background: #ffa500;">{actual_base}</span>' + sequence[idx+1:]
+        highlighted = sequence[:idx] + f'<span class="mutation-highlight" style="background: #ed8936;">{actual_base}</span>' + sequence[idx+1:]
         return highlighted, False, actual_base
     
     highlighted = sequence[:idx] + f'<span class="mutation-highlight">{alt}</span>' + sequence[idx+1:]
@@ -488,48 +544,54 @@ def main():
     apply_custom_css()
     
     st.markdown("<h1>🧬 Mutation Analyzer</h1>", unsafe_allow_html=True)
-    st.markdown("<p class='subtitle'>¡Joder, por qué no le pedí a Dima que hiciera esta página antes?</p>", unsafe_allow_html=True)
+    st.markdown("<p class='subtitle'>Advanced genomic mutation analysis tool</p>", unsafe_allow_html=True)
     
     if 'analysis_history' not in st.session_state:
         st.session_state.analysis_history = []
     
-    col1, col2 = st.columns([2, 1])
+    col1, col2 = st.columns([3, 1])
     
     with col1:
         mutation_input = st.text_input(
             "Enter Mutation Identifier",
-            placeholder="e.g., NM_022552.5:c.2688A>G or CDK9 c.208C>T",
-            help="Supports multiple formats: NM_xxx:c.xxx (CDS), NC_xxx:g.xxx (genomic), GeneName c.xxx"
+            placeholder="e.g., NM_002440.4(MSH4):c.23C>T or NM_022552.5:c.2688A>G",
+            help="Supports RefSeq with CDS positions, intronic variants, and deletions"
         )
     
     with col2:
         st.write("")
         st.write("")
-        analyze_button = st.button("🔬 Analyze Mutation", width="stretch")
+        analyze_button = st.button("🔬 Analyze", use_container_width=True)
     
-    st.markdown("<div class='info-box'>", unsafe_allow_html=True)
-    st.markdown("""
-    <p style='color: #1a202c !important;'><strong style='color: #4c51bf !important;'>Supported Formats:</strong></p>
-    <ul style='color: #1a202c !important;'>
-    <li><code>NM_022552.5:c.2688A>G</code> - RefSeq with <strong>coding sequence</strong> position (CDS)</li>
-    <li><code>NC_000009.11:g.130549830C>T</code> - Genomic position</li>
-    <li><code>CDK9 c.208C>T</code> - Gene name with CDS mutation</li>
-    <li><code>c.208C>T</code> - CDS position only (requires context)</li>
-    </ul>
-    <p style='color: #1a202c !important;'><strong style='color: #4c51bf !important;'>Note:</strong> c. = coding sequence (CDS), g. = genomic coordinates</p>
-    """, unsafe_allow_html=True)
-    st.markdown("</div>", unsafe_allow_html=True)
+    with st.expander("ℹ️ Supported Formats", expanded=False):
+        st.markdown("""
+        **Coding Sequence Variants:**
+        - `NM_002440.4(MSH4):c.23C>T` - RefSeq with gene name
+        - `NM_022552.5:c.2688A>G` - RefSeq with CDS position
+        
+        **Intronic Variants:**
+        - `NM_002440.4(MSH4):c.1906+8G>T` - Intronic position
+        
+        **Deletions:**
+        - `NM_002440.4(MSH4):c.2620-10del` - Deletion variant
+        
+        **Note:** For best results, use NM_ RefSeq accessions with CDS coordinates (c.)
+        """)
     
     if analyze_button and mutation_input:
         with st.spinner("🔍 Parsing mutation..."):
-            time.sleep(0.3)
+            time.sleep(0.2)
             mutation_data = parse_mutation_input(mutation_input)
         
         if not mutation_data:
-            st.markdown("<div class='warning-box'>⚠️ Unable to parse mutation format. Please check your input.</div>", unsafe_allow_html=True)
+            st.markdown("<div class='warning-box'>⚠️ Unable to parse mutation format. Please check the supported formats above.</div>", unsafe_allow_html=True)
             return
         
-        st.markdown("<div class='success-box'>✅ Mutation parsed successfully!</div>", unsafe_allow_html=True)
+        if mutation_data['type'] in ['deletion', 'intronic']:
+            st.markdown(f"<div class='warning-box'>⚠️ {mutation_data['type'].capitalize()} variants are detected but not fully supported for analysis yet. Only simple substitutions are currently analyzed.</div>", unsafe_allow_html=True)
+            return
+        
+        st.markdown("<div class='success-box'>✅ Mutation parsed successfully</div>", unsafe_allow_html=True)
         
         accession = None
         if 'accession' in mutation_data:
@@ -554,35 +616,45 @@ def main():
             st.error("Failed to fetch GenBank record from NCBI")
             return
         
-        st.success(f"✅ Retrieved GenBank record: {len(genbank_record.seq)} bp")
+        st.success(f"✅ Retrieved record: {len(genbank_record.seq):,} bp")
         
         mutation_type = mutation_data.get('type', 'coding')
+        position = mutation_data['position']
         
-        sequence, seq_type, cds_location = get_sequence_for_mutation(genbank_record, mutation_type)
+        result = get_sequence_for_mutation(genbank_record, mutation_type, position)
+        
+        if result[0] is None:
+            st.error("Failed to extract sequence")
+            return
+        
+        sequence = result[0]
+        seq_type = result[1]
+        cds_location = result[2]
+        adjusted_position = result[3] if len(result) > 3 and result[3] else position
+        region_start = result[4] if len(result) > 4 else None
         
         if seq_type == 'CDS':
-            st.info(f"📍 Working with CDS sequence: {len(sequence)} bp")
-        elif seq_type == 'Genomic':
-            st.info(f"📍 Working with genomic sequence: {len(sequence)} bp")
+            st.info(f"📍 Working with CDS sequence: {len(sequence):,} bp")
+        elif 'Region' in seq_type:
+            st.info(f"📍 Extracted genomic region: {len(sequence):,} bp (Position adjusted within region)")
         else:
-            st.info(f"📍 Working with full sequence: {len(sequence)} bp")
+            st.info(f"📍 Working with {seq_type.lower()} sequence: {len(sequence):,} bp")
         
-        position = mutation_data['position']
         ref = mutation_data['ref']
         alt = mutation_data['alt']
         
-        highlighted_seq, is_valid, actual_base = highlight_mutation(sequence, position, ref, alt)
+        highlighted_seq, is_valid, actual_base = highlight_mutation(sequence, adjusted_position, ref, alt)
         
-        analysis = analyze_mutation(sequence, position, ref, alt)
+        analysis = analyze_mutation(sequence, adjusted_position, ref, alt)
         
         if not is_valid:
             st.markdown(f"""<div class='validation-highlight'>
-            ⚠️ <strong>VALIDATION WARNING:</strong> At position {position}, expected nucleotide <strong>{ref}</strong>, 
-            but found <strong>{actual_base}</strong> in the sequence!
+            ⚠️ <strong>VALIDATION WARNING:</strong> At position {position}, expected <strong>{ref}</strong>, 
+            but found <strong>{actual_base}</strong> in the sequence
             </div>""", unsafe_allow_html=True)
         else:
             st.markdown(f"""<div class='success-box'>
-            ✅ <strong>VALIDATION PASSED:</strong> Nucleotide at position {position} is <strong>{actual_base}</strong> (matches expected {ref})
+            ✅ <strong>VALIDATED:</strong> Nucleotide at position {position} is <strong>{actual_base}</strong> (matches {ref})
             </div>""", unsafe_allow_html=True)
         
         st.markdown("---")
@@ -591,34 +663,34 @@ def main():
         col1, col2, col3, col4 = st.columns(4)
         
         with col1:
-            st.markdown("""
+            st.markdown(f"""
                 <div class='metric-card'>
                     <div class='metric-label'>Position</div>
-                    <div class='metric-value'>""" + str(position) + """</div>
+                    <div class='metric-value'>{position}</div>
                 </div>
             """, unsafe_allow_html=True)
         
         with col2:
-            st.markdown("""
+            st.markdown(f"""
                 <div class='metric-card'>
                     <div class='metric-label'>Change</div>
-                    <div class='metric-value'>""" + f"{ref}>{alt}" + """</div>
+                    <div class='metric-value'>{ref}>{alt}</div>
                 </div>
             """, unsafe_allow_html=True)
         
         with col3:
-            st.markdown("""
+            st.markdown(f"""
                 <div class='metric-card'>
                     <div class='metric-label'>Type</div>
-                    <div class='metric-value'>""" + analysis.get('mutation_type', 'N/A') + """</div>
+                    <div class='metric-value'>{analysis.get('mutation_type', 'N/A')}</div>
                 </div>
             """, unsafe_allow_html=True)
         
         with col4:
-            st.markdown("""
+            st.markdown(f"""
                 <div class='metric-card'>
                     <div class='metric-label'>Effect</div>
-                    <div class='metric-value'>""" + analysis.get('effect', 'N/A') + """</div>
+                    <div class='metric-value'>{analysis.get('effect', 'N/A')}</div>
                 </div>
             """, unsafe_allow_html=True)
         
@@ -629,43 +701,34 @@ def main():
         with col1:
             st.markdown("### 🧪 Molecular Details")
             st.markdown("<div class='info-box'>", unsafe_allow_html=True)
-            st.markdown(f"""
-            <p style='color: #1a202c !important;'><strong style='color: #4c51bf !important;'>Validation:</strong> <span style='color: #1a202c !important;'>{analysis['validation']}</span></p>
-            <p style='color: #1a202c !important;'><strong style='color: #4c51bf !important;'>Actual Base at Position:</strong> <span style='color: #1a202c !important; font-weight: 700;'>{analysis['actual_base']}</span></p>
-            <p style='color: #1a202c !important;'><strong style='color: #4c51bf !important;'>Sequence Type:</strong> <span style='color: #1a202c !important;'>{seq_type}</span></p>
-            """, unsafe_allow_html=True)
+            st.markdown(f"<p><strong>Validation:</strong> {analysis['validation']}</p>", unsafe_allow_html=True)
+            st.markdown(f"<p><strong>Actual Base:</strong> {analysis['actual_base']}</p>", unsafe_allow_html=True)
+            st.markdown(f"<p><strong>Sequence Type:</strong> {seq_type}</p>", unsafe_allow_html=True)
             
             if 'original_codon' in analysis:
-                st.markdown(f"""
-                <p style='color: #1a202c !important;'><strong style='color: #4c51bf !important;'>Original Codon:</strong> <span style='color: #1a202c !important;'>{analysis['original_codon']}</span></p>
-                <p style='color: #1a202c !important;'><strong style='color: #4c51bf !important;'>Mutated Codon:</strong> <span style='color: #1a202c !important;'>{analysis['mutated_codon']}</span></p>
-                <p style='color: #1a202c !important;'><strong style='color: #4c51bf !important;'>Codon Position:</strong> <span style='color: #1a202c !important;'>{analysis['codon_position']}</span></p>
-                """, unsafe_allow_html=True)
+                st.markdown(f"<p><strong>Original Codon:</strong> {analysis['original_codon']}</p>", unsafe_allow_html=True)
+                st.markdown(f"<p><strong>Mutated Codon:</strong> {analysis['mutated_codon']}</p>", unsafe_allow_html=True)
+                st.markdown(f"<p><strong>Codon Position:</strong> {analysis['codon_position']}</p>", unsafe_allow_html=True)
             
             if 'original_aa' in analysis:
-                st.markdown(f"""
-                <p style='color: #1a202c !important;'><strong style='color: #4c51bf !important;'>Amino Acid Change:</strong> <span style='color: #1a202c !important;'>{analysis['original_aa']} → {analysis['mutated_aa']}</span></p>
-                """, unsafe_allow_html=True)
+                st.markdown(f"<p><strong>Amino Acid Change:</strong> {analysis['original_aa']} → {analysis['mutated_aa']}</p>", unsafe_allow_html=True)
             
             st.markdown("</div>", unsafe_allow_html=True)
         
         with col2:
             st.markdown("### 🎯 Sequence Context")
             st.markdown("<div class='info-box'>", unsafe_allow_html=True)
-            st.markdown(f"""
-            <p style='color: #1a202c !important;'><strong style='color: #4c51bf !important;'>Accession:</strong> <span style='color: #1a202c !important;'>{accession}</span></p>
-            <p style='color: #1a202c !important;'><strong style='color: #4c51bf !important;'>Sequence Length:</strong> <span style='color: #1a202c !important;'>{len(sequence)} bp</span></p>
-            """, unsafe_allow_html=True)
+            st.markdown(f"<p><strong>Accession:</strong> {accession}</p>", unsafe_allow_html=True)
+            st.markdown(f"<p><strong>Sequence Length:</strong> {len(sequence):,} bp</p>", unsafe_allow_html=True)
             
             if 'context' in analysis:
-                st.markdown(f"""
-                <p style='color: #1a202c !important;'><strong style='color: #4c51bf !important;'>Local Context:</strong> <code style='color: #1a202c !important; background: #f7fafc; padding: 2px 6px; border-radius: 3px;'>...{analysis['context']}...</code></p>
-                """, unsafe_allow_html=True)
+                st.markdown(f"<p><strong>Local Context:</strong> <code>...{analysis['context']}...</code></p>", unsafe_allow_html=True)
             
             if cds_location:
-                st.markdown(f"""
-                <p style='color: #1a202c !important;'><strong style='color: #4c51bf !important;'>CDS Location:</strong> <span style='color: #1a202c !important;'>{cds_location}</span></p>
-                """, unsafe_allow_html=True)
+                st.markdown(f"<p><strong>CDS Location:</strong> {cds_location}</p>", unsafe_allow_html=True)
+            
+            if region_start:
+                st.markdown(f"<p><strong>Genomic Start:</strong> {region_start:,}</p>", unsafe_allow_html=True)
             
             st.markdown("</div>", unsafe_allow_html=True)
         
@@ -677,8 +740,8 @@ def main():
         if show_full:
             display_seq = highlighted_seq
         else:
-            context_range = 200
-            idx = position - 1
+            context_range = 150
+            idx = adjusted_position - 1
             start = max(0, idx - context_range)
             end = min(len(sequence), idx + context_range)
             
@@ -688,7 +751,7 @@ def main():
             if is_valid:
                 highlighted_base = f'<span class="mutation-highlight">{alt}</span>'
             else:
-                highlighted_base = f'<span class="mutation-highlight" style="background: #ffa500;">{actual_base}</span>'
+                highlighted_base = f'<span class="mutation-highlight" style="background: #ed8936;">{actual_base}</span>'
             
             display_seq = pre_context + highlighted_base + post_context
         
@@ -696,17 +759,17 @@ def main():
         
         st.markdown("---")
         
-        download_content = create_download_content(sequence, position, ref, alt, accession)
+        download_content = create_download_content(sequence, adjusted_position, ref, alt, accession)
         
         col1, col2, col3 = st.columns([1, 1, 1])
         
         with col2:
             st.download_button(
-                label="⬇️ Download Mutated Sequence (FASTA)",
+                label="⬇️ Download Sequence",
                 data=download_content,
                 file_name=f"mutated_{accession}_{position}_{ref}_{alt}.fasta",
                 mime="text/plain",
-                width="stretch"
+                use_container_width=True
             )
         
         st.session_state.analysis_history.append({
@@ -723,7 +786,7 @@ def main():
         st.markdown("---")
         st.subheader("📜 Analysis History")
         df = pd.DataFrame(st.session_state.analysis_history)
-        st.dataframe(df, width="stretch", hide_index=True)
+        st.dataframe(df, use_container_width=True, hide_index=True)
 
 if __name__ == "__main__":
     main()
